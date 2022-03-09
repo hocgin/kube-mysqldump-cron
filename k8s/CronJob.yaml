@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: basic
+  name: cm-mysql-backup-env
+data:
+  DB_HOST: sv-mysql.basic
+  DB_USER: root
+  DB_PASS: hocgin
+  ALL_DATABASES: true
+  STORAGE_DIR: `date +"%Y%m%d"`
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: basic
+  name: cj-mysql-backup
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      # Cron Job 30s 后删除
+      ttlSecondsAfterFinished: 30
+      template:
+        spec:
+          nodeSelector:
+            kubernetes.io/hostname: master
+          containers:
+            - name: mysql-backup
+              imagePullPolicy: IfNotPresent
+              image: hocgin/mysqldump:latest
+              envFrom:
+                - configMapRef:
+                    name: cm-mysql-backup-env
+              volumeMounts:
+                - name: vl-mysql-backup
+                  mountPath: /mysqldump
+                  subPath: "basic.mysql.data"
+          restartPolicy: OnFailure
+          volumes:
+            - name: vl-mysql-backup
+              persistentVolumeClaim:
+                claimName: pvc-basic
