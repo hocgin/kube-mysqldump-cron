@@ -6,8 +6,10 @@ DB_NAME=${DB_NAME:-${MYSQL_ENV_DB_NAME}}
 DB_HOST=${DB_HOST:-${MYSQL_ENV_DB_HOST}}
 ALL_DATABASES=${ALL_DATABASES}
 IGNORE_DATABASE=${IGNORE_DATABASE}
-STORAGE_DIR=${STORAGE_DIR} # 例如: `date +"%Y%m%d"`
+STORAGE_DIR=${STORAGE_DIR:-} # 例如:  /`date +"%Y%m%d"` or /xx
+STORAGE_DIR=`echo "echo ${STORAGE_DIR}" | sh`
 
+# --------------------------------------------
 MYSQLDUMP=/mysqldump"${STORAGE_DIR:-}"
 
 echo "MYSQLDUMP env variable: ${MYSQLDUMP}"

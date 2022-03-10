@@ -5,11 +5,13 @@ DB_PASS=${DB_PASS:-${MYSQL_ENV_DB_PASS}}
 DB_NAME=${DB_NAME:-${MYSQL_ENV_DB_NAME}}
 DB_HOST=${DB_HOST:-${MYSQL_ENV_DB_HOST}}
 ALL_DATABASES=${ALL_DATABASES}
-STORAGE_DIR=${STORAGE_DIR}
+STORAGE_DIR=${STORAGE_DIR:-} # 例如:  /`date +"%Y%m%d"` or /xx
+STORAGE_DIR=`echo "echo ${STORAGE_DIR}" | sh`
 
+# --------------------------------------------
 MYSQLDUMP=/mysqldump"${STORAGE_DIR:-}"
 
-echo "MYSQLDUMP path: ${MYSQLDUMP}"
+echo "MYSQLDUMP env variable: ${MYSQLDUMP}"
 
 
 if [[ ${DB_USER} == "" ]]; then
