@@ -11,6 +11,8 @@ STORAGE_DIR=`echo "echo ${STORAGE_DIR}" | sh`
 # --------------------------------------------
 MYSQLDUMP=/mysqldump"${STORAGE_DIR:-}"
 
+mkdir -p ${MYSQLDUMP}
+
 echo "MYSQLDUMP env variable: ${MYSQLDUMP}"
 
 
